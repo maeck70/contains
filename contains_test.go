@@ -27,10 +27,14 @@ func TestContains(t *testing.T) {
 					}
 				}
 			}()
-			result := Contains(tt.slice, tt.value)
+			result, err := Contains(tt.slice, tt.value)
+			if err != nil && tt.name != "Unsupported type" {
+				t.Errorf("Unexpected error for test %s: %v", tt.name, err)
+			}
 			if result != tt.expected {
 				t.Errorf("Contains(%v, %v) = %v; want %v", tt.slice, tt.value, result, tt.expected)
 			}
 		})
 	}
 }
+

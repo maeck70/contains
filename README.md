@@ -27,10 +27,10 @@ import (
 func main() {
     stringSlice := []string{"apple", "banana", "10", "3.14"}
 
-    fmt.Println(contains.Contains(stringSlice, "apple"))        // true
-    fmt.Println(contains.Contains(stringSlice, "orange"))      // false
-    fmt.Println(contains.Contains(stringSlice, 10))             // true (converts "10" to int)
-    fmt.Println(contains.Contains(stringSlice, 3.14159))        // false (converts to float64 with slight precision loss)
+    fmt.Println(contains.MustContains(stringSlice, "apple"))        // true
+    fmt.Println(contains.MustContains(stringSlice, "orange"))      // false
+    fmt.Println(contains.MustContains(stringSlice, 10))             // true (converts "10" to int)
+    fmt.Println(contains.MustContains(stringSlice, 3.14159))        // false (converts to float64 with slight precision loss)
 }
 ```
 
@@ -38,23 +38,12 @@ func main() {
 
 ### Functions
 
-* **`Contains(s []string, val any) bool`**
+* **`Contains(s []string, val any) (bool, error)`**
   - This is the primary function, taking a slice of strings (`s`) and a value (`val`) of any type.
   - It switches on the type of `val` to perform type-specific checks:
     - String: Calls `containsString` for direct comparison.
     - Int: Converts the string slice to an int slice and calls `containsInt`.
     - Float64: Converts the string slice to a float64 slice and calls `containsFloat64`.
     - Any other type: Panics with a log message indicating unsupported type.
-* **`containsString(s []string, str string) bool`**
-  - Performs a simple string comparison within the string slice.
-* **`containsInt(s []string, i int) bool`**
-  - Converts the string slice to an int slice and checks if the provided int (`i`) exists within it.
-* **`containsFloat64(s []string, f float64) bool`**
-  - Converts the string slice to a float64 slice and checks if the provided float64 (`f`) exists within it.
-
-**Error Handling:**
-- The `containsInt` and `containsFloat64` functions utilize `strconv.Atoi` and `strconv.ParseFloat` respectively. These functions return an error if the conversion fails. In such cases, the code logs a fatal error indicating the conversion failure. 
-
-This approach ensures that any potential errors during conversion are gracefully handled and reported.
-
-Feel free to customize the package name, import path, and error handling behavior as needed for your specific project.
+* **`MustContains(s []string, val any) bool`**
+  - This is similar to Contains, just Panics if an error occurs.
